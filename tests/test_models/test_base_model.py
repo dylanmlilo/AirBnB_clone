@@ -4,6 +4,7 @@ import unittest
 from datetime import datetime
 from models.base_model import BaseModel
 
+
 class TestBaseModel(unittest.TestCase):
     """ Test cases for the BaseModel class """
     def test_init(self):
@@ -16,9 +17,9 @@ class TestBaseModel(unittest.TestCase):
 
     def test_str(self):
         """ Testing the string representation of the BaseModel instance """
-        test_model = BaseModel()
-        expected = f"[{type(test_model).__name__}] ({test_model.id}) {test_model.__dict__}"
-        self.assertEqual(str(test_model), expected)
+        t_model = BaseModel()
+        exp = f"[{type(t_model).__name__}] ({t_model.id}) {t_model.__dict__}"
+        self.assertEqual(str(t_model), exp)
 
     def test_save_method(self):
         """
@@ -32,13 +33,13 @@ class TestBaseModel(unittest.TestCase):
 
     def test_to_dict(self):
         """ Testing the to_dict method of the BaseModel instance """
-        test_model = BaseModel()
-        model_dict = test_model.to_dict()
+        tmod = BaseModel()
+        model_dict = tmod.to_dict()
         self.assertIsInstance(model_dict, dict)
-        self.assertEqual(model_dict["__class__"], type(test_model).__name__)
-        self.assertEqual(model_dict["id"], test_model.id)
-        self.assertEqual(model_dict["created_at"], test_model.created_at.isoformat())
-        self.assertEqual(model_dict["updated_at"], test_model.updated_at.isoformat())
+        self.assertEqual(model_dict["__class__"], type(tmod).__name__)
+        self.assertEqual(model_dict["id"], tmod.id)
+        self.assertEqual(model_dict["created_at"], tmod.created_at.isoformat())
+        self.assertEqual(model_dict["updated_at"], tmod.updated_at.isoformat())
 
     def test_instance_of_datetime(self):
         """
@@ -48,6 +49,7 @@ class TestBaseModel(unittest.TestCase):
         test_model = BaseModel()
         self.assertIsInstance(test_model.created_at, datetime)
         self.assertIsInstance(test_model.updated_at, datetime)
+
 
 if __name__ == '__main__':
     unittest.main()

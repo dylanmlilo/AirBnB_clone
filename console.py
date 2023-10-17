@@ -67,6 +67,7 @@ attributes = {
     }
 }
 
+
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
 
@@ -92,22 +93,19 @@ class HBNBCommand(cmd.Cmd):
         if not arg:
             print("** class name missing **")
             return
-        
+
         args = arg.split()
-        
         class_name = args[0]
-        
-        if class_name not in ["BaseModel", "User", "Place",
-                              "Review", "State", "City", "Amenity"]:
+
+        if class_name not in all_classes:
             print("** class doesn't exist **")
             return
 
-        new_instance = eval(class_name)()
-         
+        new_instance = all_classes[class_name]()
         new_instance.save()
-         
+
         print(new_instance.id)
-        
+
     def do_show(self, arg):
         """
         Prints the string representation of an
@@ -120,7 +118,7 @@ class HBNBCommand(cmd.Cmd):
         args = arg.split()
         class_name = args[0]
 
-        if class_name not in ["BaseModel"]:
+        if class_name not in all_classes:
             print("** class doesn't exist **")
             return
 
@@ -131,14 +129,14 @@ class HBNBCommand(cmd.Cmd):
         instance_id = args[1]
         key = class_name + "." + instance_id
         instances = storage.all()
-        
+
         if key not in instances:
             print("** no instance found **")
             return
 
         instance = instances[key]
         print(instance)
-        
+
     def do_destroy(self, arg):
         """Deletes an instance based on the class name and id"""
         if not arg:
@@ -148,7 +146,7 @@ class HBNBCommand(cmd.Cmd):
         args = arg.split()
         class_name = args[0]
 
-        if class_name not in ["BaseModel"]:
+        if class_name not in all_classes:
             print("** class doesn't exist **")
             return
 
@@ -166,28 +164,6 @@ class HBNBCommand(cmd.Cmd):
 
         del instances[key]
         storage.save()
-        
-    def do_all(self, arg):
-        """
-        Prints the string representation of all
-        instances based on the class name
-        """
-        classes = ["BaseModel"]
-        instances = storage.all()
-
-        if not arg:
-            print([str(instance) for instance in instances.values()])
-            return
-
-        class_name = arg.split()[0]
-        if class_name not in classes:
-            print("** class doesn't exist **")
-            return
-
-        filtered_instances = [str(instance)
-                              for instance in instances.values() 
-                                if type(instance).__name__ == class_name]
-        print(filtered_instances)
 
     def do_update(self, args):
         """
@@ -198,8 +174,8 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        patten = r'^(\S+)(?:\s(\S+)(?:\s(\S+)(?:\s((?:"[^"]*")|(?:(\S)+)))?)?)?'
-        match = re.search(patten, args)
+        paten = r'^(\S+)(?:\s(\S+)(?:\s(\S+)(?:\s((?:"[^"]*")|(?:(\S)+)))?)?)?'
+        match = re.search(paten, args)
         if not match:
             print("** class name missing **")
             return
@@ -243,22 +219,26 @@ class HBNBCommand(cmd.Cmd):
             instance.save()
         else:
             print("** attribute name missing **")
-            
+
     def do_all(self, arg):
-        """Prints the string representation of all instances based on the class name"""
+        """
+        Prints the string representation of
+        all instances based on the class name
+        """
         if not arg:
             print([str(instance) for instance in storage.all().values()])
             return
-    
+
         class_name = arg.split()[0]
         if class_name not in all_classes:
             print("** class doesn't exist **")
             return
-    
+
         instances = [str(instance)
                      for instance in storage.all().values()
-                      if isinstance(instance, all_classes[class_name])]
+                     if isinstance(instance, all_classes[class_name])]
         print(instances)
-          
+
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
